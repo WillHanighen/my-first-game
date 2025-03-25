@@ -1,70 +1,67 @@
-function preload() {
-  this.load.spritesheet("player", "assets/Homeless_1/Idle.png", { frameWidth: 32, frameHeight: 32 });
-}
-
-function create() {
-  this.w = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
-  this.a = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
-  this.s = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
-  this.d = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
-
-  this.player = this.physics.add
-    .sprite(config.width / 2, config.height / 2, "player")
-    .setScale(0.25, 0.25);
-  this.player.setCollideWorldBounds(true);
-
-  this.anims.create({
-    key: "walk",
-    frames: this.anims.generateFrameNumbers("player", { start: 0, end: 7 }),
-    frameRate: 10,
-    repeat: -1
-  });
-  this.player.anims.play("walk", true);
-}
-
-function update() {
-  let cursors = this.input.keyboard.createCursorKeys();
-  if (
-    cursors.left.isDown ||
-    this.a.isDown ||
-    cursors.right.isDown ||
-    this.d.isDown
-  )
-    this.player.setVelocityX(cursors.left.isDown || this.a.isDown ? -160 : 160);
-  else this.player.setVelocityX(0);
-  if (
-    cursors.up.isDown ||
-    this.w.isDown ||
-    cursors.down.isDown ||
-    this.s.isDown
-  )
-    this.player.setVelocityY(cursors.up.isDown || this.w.isDown ? -160 : 160);
-  else this.player.setVelocityY(0);
-}
-
 const config = {
   type: Phaser.AUTO,
-  scale: {
-    mode: Phaser.Scale.FULLSCREEN,
-    autoCenter: Phaser.Scale.CENTER_BOTH,
-    width: window.innerWidth,
-    height: window.innerHeight
-  },
-  backgroundColor: "#f9f9f9",
+  width: 800,  // Fixed width
+  height: 600, // Fixed height
+  backgroundColor: "#666666",
   physics: {
     default: "arcade",
     arcade: {
-      gravity: {
-        y: 0,
-      },
-      debug: false,
-    },
+      gravity: { y: 0 },
+      debug: true  // Ensure debug is on
+    }
   },
   scene: {
     preload: preload,
     create: create,
     update: update,
-  },
+  }
 };
+
+function preload() {
+  console.log("Attempting to load sprite sheet");
+  // Verify exact path and log potential issues
+  try {
+    this.load.spritesheet("player", "assets/Homeless_1/Idle.png", { 
+      frameWidth: 64,  // Confirm these match your sprite sheet
+      frameHeight: 64
+    });
+  } catch (error) {
+    console.error("Sprite sheet loading error:", error);
+  }
+}
+
+function create() {
+  console.log("Creating scene");
+
+  // Create player with more explicit positioning and scaling
+  this.player = this.physics.add.sprite(400, 300, "player")
+    .setScale(2)  // Adjust scale to make sprite visible
+    .setOrigin(0.5);  // Center the sprite
+
+  // Explicit animation creation
+  this.anims.create({
+    key: "idle",
+    frames: this.anims.generateFrameNumbers("player", { start: 0, end: 7 }),
+    frameRate: 10,
+    repeat: -1
+  });
+
+  this.player.play("walk");
+}
+
+function update() {
+  const cursors = this.input.keyboard.createCursorKeys();
+
+  // Simple movement controls
+  this.player.setVelocityX(
+    cursors.left.isDown ? -160 : 
+    cursors.right.isDown ? 160 : 0
+  );
+
+  this.player.setVelocityY(
+    cursors.up.isDown ? -160 : 
+    cursors.down.isDown ? 160 : 0
+  );
+}
 
 const game = new Phaser.Game(config);
