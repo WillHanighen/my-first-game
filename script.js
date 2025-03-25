@@ -76,9 +76,11 @@ function create() {
   // Create status bars with padding from bottom-left
   this.staminaBar = this.add.rectangle(10, config.height - 40, 200, 15, 0x0000ff);
   this.staminaBar.setOrigin(0, 0);
+  this.staminaBar.setStrokeStyle(2, 0x000000);
   
   this.healthBar = this.add.rectangle(10, config.height - 20, 200, 15, 0xff0000);
   this.healthBar.setOrigin(0, 0);
+  this.healthBar.setStrokeStyle(2, 0x000000);
   
   // Setup WASD keys
   this.wasdKeys = this.input.keyboard.addKeys({
