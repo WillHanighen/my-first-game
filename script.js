@@ -23,7 +23,7 @@ function preload() {
   try {
     this.load.spritesheet("player", "assets/Homeless_1/Idle.png", { 
       frameWidth: 64,  // Confirm these match your sprite sheet
-      frameHeight: 64
+      frameHeight: 128
     });
   } catch (error) {
     console.error("Sprite sheet loading error:", error);
@@ -36,17 +36,16 @@ function create() {
   // Create player with more explicit positioning and scaling
   this.player = this.physics.add.sprite(400, 300, "player")
     .setScale(2)  // Adjust scale to make sprite visible
-    .setOrigin(0.5);  // Center the sprite
 
   // Explicit animation creation
   this.anims.create({
     key: "idle",
-    frames: this.anims.generateFrameNumbers("player", { start: 0, end: 7 }),
-    frameRate: 10,
+    frames: this.anims.generateFrameNumbers("player", { start: 0, end: 5 }),
+    frameRate: 1,
     repeat: -1
   });
 
-  this.player.play("walk");
+  this.player.play("idle");
 }
 
 function update() {
