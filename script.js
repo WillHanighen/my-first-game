@@ -32,6 +32,10 @@ function preload() {
       frameWidth: 128,
       frameHeight: 128
     });
+    this.load.spritesheet("jump", "assets/Homeless_1/Jump.png", { 
+      frameWidth: 128,
+      frameHeight: 128
+    });
   } catch (error) {
     console.error("Sprite sheet loading error:", error);
   }
@@ -72,6 +76,13 @@ function create() {
     frameRate: 12,
     repeat: -1,
     yoyo: true
+  });
+
+  this.anims.create({
+    key: "jump",
+    frames: this.anims.generateFrameNumbers("jump", { start: 0, end: 5 }),
+    frameRate: 8,
+    repeat: 0
   });
 
   this.player.play("idle");
@@ -116,6 +127,7 @@ function update() {
   // Jump when space is pressed and player is touching the ground
   if (this.controls.jump.isDown && this.player.body.touching.down) {
     this.player.setVelocityY(-500);
+    this.player.play("jump", true);
   }
     
   // Flip sprite based on movement direction
