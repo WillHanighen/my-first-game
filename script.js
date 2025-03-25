@@ -6,7 +6,7 @@ const config = {
   physics: {
     default: "arcade",
     arcade: {
-      gravity: { y: 300 },
+      gravity: { y: 800 },
       debug: true  // Ensure debug is on
     }
   },
@@ -89,12 +89,12 @@ function create() {
   this.healthBar.setOrigin(0, 0);
   this.healthBar.setStrokeStyle(2, 0x000000);
   
-  // Setup WASD keys
-  this.wasdKeys = this.input.keyboard.addKeys({
-    up: Phaser.Input.Keyboard.KeyCodes.W,
+  // Setup controls
+  this.controls = this.input.keyboard.addKeys({
     down: Phaser.Input.Keyboard.KeyCodes.S,
     left: Phaser.Input.Keyboard.KeyCodes.A,
-    right: Phaser.Input.Keyboard.KeyCodes.D
+    right: Phaser.Input.Keyboard.KeyCodes.D,
+    jump: Phaser.Input.Keyboard.KeyCodes.SPACE
   });
 }
 
@@ -104,11 +104,16 @@ function update() {
   
   let moving = false;
   
-  if (this.wasdKeys.left.isDown || this.wasdKeys.right.isDown || this.wasdKeys.up.isDown || this.wasdKeys.down.isDown) {
+  if (this.controls.left.isDown || this.controls.right.isDown || this.controls.down.isDown) {
     moving = true;
-    const velocityX = this.wasdKeys.left.isDown ? -speed : this.wasdKeys.right.isDown ? speed : 0;
+    const velocityX = this.controls.left.isDown ? -speed : this.controls.right.isDown ? speed : 0;
     this.player.setVelocityX(velocityX);
-    this.player.setVelocityY(this.wasdKeys.up.isDown ? -speed : this.wasdKeys.down.isDown ? speed : 0);
+  }
+  
+  // Jump when space is pressed and player is touching the ground
+  if (this.controls.jump.isDown && this.player.body.touching.down) {
+    this.player.setVelocityY(-500);
+  }
     
     // Flip sprite based on movement direction
     if (velocityX !== 0) {
