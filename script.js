@@ -73,26 +73,33 @@ function create() {
   this.stamina = 100;
   this.health = 100;
   
-  // Create status bars
-  this.staminaBar = this.add.rectangle(20, 560, 200, 20, 0x0000ff);
+  // Create status bars with padding from bottom-left
+  this.staminaBar = this.add.rectangle(10, config.height - 40, 200, 15, 0x0000ff);
   this.staminaBar.setOrigin(0, 0);
   
-  this.healthBar = this.add.rectangle(20, 590, 200, 20, 0xff0000);
+  this.healthBar = this.add.rectangle(10, config.height - 20, 200, 15, 0xff0000);
   this.healthBar.setOrigin(0, 0);
+  
+  // Setup WASD keys
+  this.wasdKeys = this.input.keyboard.addKeys({
+    up: Phaser.Input.Keyboard.KeyCodes.W,
+    down: Phaser.Input.Keyboard.KeyCodes.S,
+    left: Phaser.Input.Keyboard.KeyCodes.A,
+    right: Phaser.Input.Keyboard.KeyCodes.D
+  });
 }
 
 function update() {
-  const cursors = this.input.keyboard.createCursorKeys();
-  const isRunning = cursors.shift.isDown && this.stamina > 0;
+  const isRunning = this.input.keyboard.addKey('SHIFT').isDown && this.stamina > 0;
   const speed = isRunning ? 300 : 160;
   
   let moving = false;
   
-  if (cursors.left.isDown || cursors.right.isDown || cursors.up.isDown || cursors.down.isDown) {
+  if (this.wasdKeys.left.isDown || this.wasdKeys.right.isDown || this.wasdKeys.up.isDown || this.wasdKeys.down.isDown) {
     moving = true;
-    const velocityX = cursors.left.isDown ? -speed : cursors.right.isDown ? speed : 0;
+    const velocityX = this.wasdKeys.left.isDown ? -speed : this.wasdKeys.right.isDown ? speed : 0;
     this.player.setVelocityX(velocityX);
-    this.player.setVelocityY(cursors.up.isDown ? -speed : cursors.down.isDown ? speed : 0);
+    this.player.setVelocityY(this.wasdKeys.up.isDown ? -speed : this.wasdKeys.down.isDown ? speed : 0);
     
     // Flip sprite based on movement direction
     if (velocityX !== 0) {
