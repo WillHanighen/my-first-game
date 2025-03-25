@@ -116,6 +116,7 @@ function update() {
   const maxSpeed = isRunning ? 300 : 160;
   
   let moving = false;
+  let velocityX = this.player.body.velocity.x;
   
   // Handle horizontal movement with acceleration
   if (this.controls.left.isDown) {
@@ -155,12 +156,11 @@ function update() {
   } else {
     this.isJumping = false;
     
-  // Flip sprite based on movement direction
-  if (velocityX !== 0) {
-    this.player.setFlipX(velocityX < 0);
-  }
+    // Flip sprite based on movement direction
+    if (velocityX !== 0) {
+      this.player.setFlipX(velocityX < 0);
+    }
     
-  if (this.player.body.touching.down) {
     if (moving) {
       if (isRunning) {
         this.stamina = Math.max(0, this.stamina - 0.5);
