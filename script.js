@@ -80,12 +80,17 @@ function create() {
   });
 
   this.anims.create({
-    key: "jump",
-    frames: this.anims.generateFrameNumbers("jump", { start: 0, end: 16 }),
+    key: "jumpStart",
+    frames: this.anims.generateFrameNumbers("jump", { start: 0, end: 5 }),
     frameRate: 18,
-    repeat: 0,
-    showOnStart: true,
-    hideOnComplete: false
+    repeat: 0
+  });
+
+  this.anims.create({
+    key: "jumpEnd",
+    frames: this.anims.generateFrameNumbers("jump", { start: 6, end: 16 }),
+    frameRate: 18,
+    repeat: 0
   });
 
   this.player.play("idle");
@@ -141,8 +146,9 @@ function update() {
   // Jump mechanics
   if (this.controls.jump.isDown && this.player.body.touching.down) {
     this.player.setVelocityY(-600);
-    this.player.play("jump", true);
+    this.player.play("jumpStart", true);
     this.isJumping = true;
+    this.isLanding = false;
   }
   
   // Variable jump height
@@ -152,12 +158,13 @@ function update() {
   
   // Handle animations based on state
   if (!this.player.body.touching.down) {
-    if (!this.isJumping) {
-      this.player.play("jump", true);
-      this.isJumping = true;
+    if (this.player.body.velocity.y > 200 && !this.isLanding) {
+      this.player.play("jumpEnd", true);
+      this.isLanding = true;
     }
   } else {
     this.isJumping = false;
+    this.isLanding = false;
     
     // Flip sprite based on movement direction
     if (velocityX !== 0) {
