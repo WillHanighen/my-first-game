@@ -22,7 +22,7 @@ function preload() {
   // Verify exact path and log potential issues
   try {
     this.load.spritesheet("player", "assets/Homeless_1/Idle.png", { 
-      frameWidth: 64,  // Confirm these match your sprite sheet
+      frameWidth: 128,
       frameHeight: 128
     });
   } catch (error) {
@@ -40,8 +40,8 @@ function create() {
   // Explicit animation creation
   this.anims.create({
     key: "idle",
-    frames: this.anims.generateFrameNumbers("player", { start: 0, end: 5 }),
-    frameRate: 1,
+    frames: this.anims.generateFrameNumbers("player", { start: 0, end: 4 }),
+    frameRate: 8,
     repeat: -1
   });
 
