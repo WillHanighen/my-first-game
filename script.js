@@ -41,8 +41,9 @@ function create() {
   this.anims.create({
     key: "idle",
     frames: this.anims.generateFrameNumbers("player", { start: 0, end: 4 }),
-    frameRate: 4,
-    repeat: -1
+    frameRate: 8,
+    repeat: -1,
+    yoyo: true
   });
 
   this.player.play("idle");
