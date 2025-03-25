@@ -1,5 +1,5 @@
 function preload() {
-  this.load.spritesheet("player", "assets/Homeless_1/Idle.png", { frameWidth: 64, frameHeight: 64 });
+  this.load.spritesheet("player", "assets/Homeless_1/Idle.png", { frameWidth: 32, frameHeight: 32 });
 }
 
 function create() {
