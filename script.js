@@ -6,8 +6,9 @@ const config = {
   physics: {
     default: "arcade",
     arcade: {
-      gravity: { y: 800 },
-      debug: true  // Ensure debug is on
+      gravity: { y: 1200 },
+      debug: true,  // Ensure debug is on
+      maxVelocity: { x: 500, y: 1000 }
     }
   },
   scene: {
@@ -111,40 +112,66 @@ function create() {
 
 function update() {
   const isRunning = this.input.keyboard.addKey('SHIFT').isDown && this.stamina > 0;
-  const speed = isRunning ? 300 : 160;
+  const acceleration = isRunning ? 2000 : 1000;
+  const maxSpeed = isRunning ? 300 : 160;
   
   let moving = false;
   
-  let velocityX = 0;
-  if (this.controls.left.isDown || this.controls.right.isDown || this.controls.down.isDown) {
+  // Handle horizontal movement with acceleration
+  if (this.controls.left.isDown) {
     moving = true;
-    velocityX = this.controls.left.isDown ? -speed : this.controls.right.isDown ? speed : 0;
-    this.player.setVelocityX(velocityX);
+    this.player.setAccelerationX(-acceleration);
+  } else if (this.controls.right.isDown) {
+    moving = true;
+    this.player.setAccelerationX(acceleration);
   } else {
-    this.player.setVelocityX(0);
+    this.player.setAccelerationX(0);
+    // Add friction when not moving
+    this.player.setDragX(1000);
   }
   
-  // Jump when space is pressed and player is touching the ground
-  if (this.controls.jump.isDown && this.player.body.touching.down) {
-    this.player.setVelocityY(-500);
-    this.player.play("jump", true);
+  // Clamp horizontal velocity
+  if (Math.abs(this.player.body.velocity.x) > maxSpeed) {
+    this.player.setVelocityX(maxSpeed * Math.sign(this.player.body.velocity.x));
   }
+  
+  // Jump mechanics
+  if (this.controls.jump.isDown && this.player.body.touching.down) {
+    this.player.setVelocityY(-600);
+    this.player.play("jump", true);
+    this.isJumping = true;
+  }
+  
+  // Variable jump height
+  if (!this.controls.jump.isDown && this.player.body.velocity.y < 0) {
+    this.player.setVelocityY(this.player.body.velocity.y * 0.5);
+  }
+  
+  // Handle animations based on state
+  if (!this.player.body.touching.down) {
+    if (!this.isJumping) {
+      this.player.play("jump", true);
+    }
+  } else {
+    this.isJumping = false;
     
   // Flip sprite based on movement direction
   if (velocityX !== 0) {
     this.player.setFlipX(velocityX < 0);
   }
     
-  if (moving) {
-    if (isRunning) {
-      this.stamina = Math.max(0, this.stamina - 0.5);
-      this.player.play("run", true);
+  if (this.player.body.touching.down) {
+    if (moving) {
+      if (isRunning) {
+        this.stamina = Math.max(0, this.stamina - 0.5);
+        this.player.play("run", true);
+      } else {
+        this.player.play("walk", true);
+      }
     } else {
-      this.player.play("walk", true);
+      this.player.play("idle", true);
+      this.stamina = Math.min(100, this.stamina + 0.2);
     }
-  } else {
-    this.player.play("idle", true);
-    this.stamina = Math.min(100, this.stamina + 0.2);
   }
   
   // Update status bars
