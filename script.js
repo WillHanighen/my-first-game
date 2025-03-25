@@ -1,5 +1,5 @@
 function preload() {
-  this.load.image("player", "assets/Homeless_1/Idle.png");
+  this.load.spritesheet("player", "assets/Homeless_1/Idle.png", { frameWidth: 64, frameHeight: 64 });
 }
 
 function create() {
@@ -9,9 +9,17 @@ function create() {
   this.d = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
 
   this.player = this.physics.add
-    .image(config.width / 2, config.height / 2, "player")
+    .sprite(config.width / 2, config.height / 2, "player")
     .setScale(0.25, 0.25);
   this.player.setCollideWorldBounds(true);
+
+  this.anims.create({
+    key: "walk",
+    frames: this.anims.generateFrameNumbers("player", { start: 0, end: 7 }),
+    frameRate: 10,
+    repeat: -1
+  });
+  this.player.anims.play("walk", true);
 }
 
 function update() {
@@ -36,8 +44,12 @@ function update() {
 
 const config = {
   type: Phaser.AUTO,
-  width: 500,
-  height: 400,
+  scale: {
+    mode: Phaser.Scale.FULLSCREEN,
+    autoCenter: Phaser.Scale.CENTER_BOTH,
+    width: window.innerWidth,
+    height: window.innerHeight
+  },
   backgroundColor: "#f9f9f9",
   physics: {
     default: "arcade",
