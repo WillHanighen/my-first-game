@@ -6,7 +6,7 @@ const config = {
   physics: {
     default: "arcade",
     arcade: {
-      gravity: { y: 0 },
+      gravity: { y: 300 },
       debug: true  // Ensure debug is on
     }
   },
@@ -40,8 +40,15 @@ function preload() {
 function create() {
   console.log("Creating scene");
 
+  // Create floor
+  this.floor = this.add.rectangle(400, 550, 800, 20, 0x4a4a4a);
+  this.physics.add.existing(this.floor, true); // true makes it static
+
   this.player = this.physics.add.sprite(400, 300, "idle")
     .setScale(2);
+    
+  // Add collision between player and floor
+  this.physics.add.collider(this.player, this.floor);
 
   this.anims.create({
     key: "idle",
