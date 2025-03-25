@@ -83,7 +83,9 @@ function create() {
     key: "jump",
     frames: this.anims.generateFrameNumbers("jump", { start: 0, end: 5 }),
     frameRate: 18,
-    repeat: 0
+    repeat: 0,
+    showOnStart: true,
+    hideOnComplete: false
   });
 
   this.player.play("idle");
@@ -150,7 +152,7 @@ function update() {
   
   // Handle animations based on state
   if (!this.player.body.touching.down) {
-    if (!this.isJumping) {
+    if (!this.isJumping || !this.player.anims.isPlaying) {
       this.player.play("jump", true);
     }
   } else {
