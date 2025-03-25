@@ -81,7 +81,7 @@ function create() {
 
   this.anims.create({
     key: "jump",
-    frames: this.anims.generateFrameNumbers("jump", { start: 0, end: 5 }),
+    frames: this.anims.generateFrameNumbers("jump", { start: 0, end: 16 }),
     frameRate: 18,
     repeat: 0,
     showOnStart: true,
