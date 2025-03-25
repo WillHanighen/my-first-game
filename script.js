@@ -104,10 +104,13 @@ function update() {
   
   let moving = false;
   
+  let velocityX = 0;
   if (this.controls.left.isDown || this.controls.right.isDown || this.controls.down.isDown) {
     moving = true;
-    const velocityX = this.controls.left.isDown ? -speed : this.controls.right.isDown ? speed : 0;
+    velocityX = this.controls.left.isDown ? -speed : this.controls.right.isDown ? speed : 0;
     this.player.setVelocityX(velocityX);
+  } else {
+    this.player.setVelocityX(0);
   }
   
   // Jump when space is pressed and player is touching the ground
@@ -115,11 +118,12 @@ function update() {
     this.player.setVelocityY(-500);
   }
     
-    // Flip sprite based on movement direction
-    if (velocityX !== 0) {
-      this.player.setFlipX(velocityX < 0);
-    }
+  // Flip sprite based on movement direction
+  if (velocityX !== 0) {
+    this.player.setFlipX(velocityX < 0);
+  }
     
+  if (moving) {
     if (isRunning) {
       this.stamina = Math.max(0, this.stamina - 0.5);
       this.player.play("run", true);
@@ -127,7 +131,6 @@ function update() {
       this.player.play("walk", true);
     }
   } else {
-    this.player.setVelocity(0);
     this.player.play("idle", true);
     this.stamina = Math.min(100, this.stamina + 0.2);
   }
