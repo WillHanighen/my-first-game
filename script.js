@@ -1,5 +1,5 @@
 function preload() {
-  this.load.image("player", "assets/repl.png");
+  this.load.image("player", "assets/Homeless_1/Idle.png");
 }
 
 function create() {
