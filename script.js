@@ -40,8 +40,8 @@ function create() {
   // Explicit animation creation
   this.anims.create({
     key: "idle",
-    frames: this.anims.generateFrameNumbers("player", { start: 0, end: 4 }),
-    frameRate: 8,
+    frames: this.anims.generateFrameNumbers("player", { start: 0, end: 5 }),
+    frameRate: 3,
     repeat: -1,
     yoyo: true
   });
