@@ -152,8 +152,9 @@ function update() {
   
   // Handle animations based on state
   if (!this.player.body.touching.down) {
-    if (!this.isJumping || !this.player.anims.isPlaying) {
+    if (!this.isJumping) {
       this.player.play("jump", true);
+      this.isJumping = true;
     }
   } else {
     this.isJumping = false;
