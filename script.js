@@ -90,8 +90,14 @@ function update() {
   
   if (cursors.left.isDown || cursors.right.isDown || cursors.up.isDown || cursors.down.isDown) {
     moving = true;
-    this.player.setVelocityX(cursors.left.isDown ? -speed : cursors.right.isDown ? speed : 0);
+    const velocityX = cursors.left.isDown ? -speed : cursors.right.isDown ? speed : 0;
+    this.player.setVelocityX(velocityX);
     this.player.setVelocityY(cursors.up.isDown ? -speed : cursors.down.isDown ? speed : 0);
+    
+    // Flip sprite based on movement direction
+    if (velocityX !== 0) {
+      this.player.setFlipX(velocityX < 0);
+    }
     
     if (isRunning) {
       this.stamina = Math.max(0, this.stamina - 0.5);
