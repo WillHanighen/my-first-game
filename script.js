@@ -124,15 +124,8 @@ function create() {
   this.zombieAdamage = 5;
   this.zombieAHealth = 35;
   this.zombieAPatrollCounter = 0;
-  this.zombieAPatrollDistance = Math.floor(Math.random() * 301);
-
-  // Add collision between entities
-  this.physics.add.collider(this.player, this.floor);
-  this.physics.add.collider(this.zombieA, this.floor);
-  this.physics.add.collider(this.player, this.zombieA, (player, zombieA) => {
-    console.log("Player collided with zombie A");
-    this.health = Math.max(0, this.health - this.zombieAdamage);
-  }, null, this);
+  this.zombieAPatrollDistance = Math.floor(Math.random() * 201);
+  this.zombieAPatrolling = true;
 
   // Create animations
   this.anims.create({
@@ -188,11 +181,20 @@ function create() {
     key: "zombie_attack_a",
     frames: this.anims.generateFrameNumbers("zombie_attack_a", { start: 0, end: 9 }),
     frameRate: 6,
-    repeat: 0
+    repeat: -1
   })
 
   this.player.play("idle");
   this.zombieA.play("zombie_idle_a");
+
+  // Add collision between entities
+  this.physics.add.collider(this.player, this.floor);
+  this.physics.add.collider(this.zombieA, this.floor);
+  this.physics.add.collider(this.player, this.zombieA, (player, zombieA) => {
+    console.log("Player collided with zombie A");
+    this.health = Math.max(0, this.health - this.zombieAdamage);
+    this.zombieA.play("zombie_attack_A", true);
+  }, null, this);
 
   // Status values
   this.stamina = 100;
@@ -429,23 +431,46 @@ function update() {
   }
 
   // zombie movement
-  this.zombieSpeed = 1;
-  this.zombieAPatrolling = true;
-  this.zombieAPatrollingSpeed = 0.5;
+  this.zombieSpeed = 0.5;
+  this.zombieAPatrollingSpeed = 0.2;
+  this.zombieADetectionRange = 275;
+
+  if (this.zombieA.x + this.zombieADetectionRange > this.player.x && this.zombieA.x - this.zombieADetectionRange < this.player.x) {
+    this.zombieAPatrolling = false;
+  } else {
+    this.zombieAPatrolling = true;
+  }
+
   if (this.zombieA && this.zombieAPatrolling) {
     if (this.zombieAPatrollDistance > this.zombieAPatrollCounter) {
+      this.zombieA.play("zombie_walk_a", true);
+      this.zombieA.setFlipX(false);
       this.zombieA.x += this.zombieAPatrollingSpeed;
       this.zombieAPatrollCounter += this.zombieAPatrollingSpeed;
     } else {
+      this.zombieA.play("zombie_walk_a", true);
+      this.zombieA.setFlipX(true);
       this.zombieA.x -= this.zombieAPatrollingSpeed;
       this.zombieAPatrollCounter -= this.zombieAPatrollingSpeed;
     }
-    if (this.zombieAPatrollDistance == this.zombieAPatrollCounter) {
+    if (Math.floor(this.zombieAPatrollDistance) == Math.floor(this.zombieAPatrollCounter)) {
       this.zombieAPatrollCounter = 0;
-      this.zombieAPatrollDistance = -1 * (Math.random() * 301);
+      if (this.zombieAPatrollDistance < 0) {
+        this.zombieAPatrollDistance = Math.random() * 201;
+      } else {
+        this.zombieAPatrollDistance = -1 * (Math.random() * 201);
+      }
     }
-    console.log(this.zombieAPatrollDistance);
-    console.log(this.zombieAPatrollCounter);
+  } else if (this.zombieAPatrolling == false) {
+    if (this.zombieA.x < this.player.x) {
+      this.zombieA.play("zombie_walk_a", true);
+      this.zombieA.setFlipX(false);
+      this.zombieA.x += this.zombieSpeed;
+    } else {
+      this.zombieA.play("zombie_walk_a", true);
+      this.zombieA.setFlipX(true);
+      this.zombieA.x -= this.zombieSpeed;
+    }
   }
 }
 
