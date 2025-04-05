@@ -1,3 +1,5 @@
+import config from './config.js'
+
 function create() {
   console.log("Creating scene");
 
