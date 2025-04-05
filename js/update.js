@@ -5,7 +5,7 @@ function update() {
 
   if (this.stamina <= 0) {
     this.canRun = false;
-    this.staminaRecoveryDelay = 360; // Set a delay of 360 frames (3 second at 60 FPS)
+    this.staminaRecoveryDelay = 360; // Set a delay of 360 frames (3 second 60 FPS)
   }
 
   if (this.canRun && shiftKey.isDown && this.stamina > 0) {
