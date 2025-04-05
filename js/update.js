@@ -1,3 +1,5 @@
+import config from './config.js'
+
 function update() {
   // Modify the isRunning check
   const shiftKey = this.input.keyboard.addKey('SHIFT');

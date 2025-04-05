@@ -1,3 +1,7 @@
+import preload from './preload.js';
+import create from './create.js'
+import update from './update.js';
+
 const config = {
   type: Phaser.AUTO,
   scale: {
