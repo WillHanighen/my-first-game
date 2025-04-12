@@ -46,6 +46,7 @@ function create() {
   this.zombieAPatrollCounter = 0;
   this.zombieAPatrollDistance = Math.floor(Math.random() * 201);
   this.zombieAPatrolling = true;
+  this.zombieA.isAttacking = false;
 
   // Create animations
   this.anims.create({
@@ -101,7 +102,7 @@ function create() {
     key: "zombie_attack_a",
     frames: this.anims.generateFrameNumbers("zombie_attack_a", { start: 0, end: 9 }),
     frameRate: 6,
-    repeat: -1
+    repeat: 0
   })
 
   this.player.play("idle");
@@ -110,11 +111,6 @@ function create() {
   // Add collision between entities
   this.physics.add.collider(this.player, this.floor);
   this.physics.add.collider(this.zombieA, this.floor);
-  this.physics.add.collider(this.player, this.zombieA, (player, zombieA) => {
-    console.log("Player collided with zombie A");
-    this.health = Math.max(0, this.health - this.zombieAdamage);
-    this.zombieA.play("zombie_attack_A", true);
-  }, null, this);
 
   // Status values
   this.stamina = 100;

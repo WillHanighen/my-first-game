@@ -117,7 +117,8 @@ function update() {
     this.zombieAPatrolling = true;
   }
 
-  if (this.zombieA && this.zombieAPatrolling) {
+  // zombie patrolling
+  if (this.zombieA && this.zombieAPatrolling && !this.zombieA.isAttacking) {
     if (this.zombieAPatrollDistance > this.zombieAPatrollCounter) {
       this.zombieA.play("zombie_walk_a", true);
       this.zombieA.setFlipX(false);
@@ -129,6 +130,7 @@ function update() {
       this.zombieA.x -= this.zombieAPatrollingSpeed;
       this.zombieAPatrollCounter -= this.zombieAPatrollingSpeed;
     }
+    // flip zombie sprite
     if (Math.floor(this.zombieAPatrollDistance) == Math.floor(this.zombieAPatrollCounter)) {
       this.zombieAPatrollCounter = 0;
       if (this.zombieAPatrollDistance < 0) {
@@ -137,7 +139,9 @@ function update() {
         this.zombieAPatrollDistance = -1 * (Math.random() * 201);
       }
     }
-  } else if (this.zombieAPatrolling == false) {
+    // chase player
+  } else if (this.zombieAPatrolling == false && !this.zombieA.isAttacking) {
+    // console.log(this.zombieA.isAttacking);
     if (this.zombieA.x < this.player.x) {
       this.zombieA.play("zombie_walk_a", true);
       this.zombieA.setFlipX(false);
@@ -148,6 +152,23 @@ function update() {
       this.zombieA.x -= this.zombieSpeed;
     }
   }
+  // attack player
+  this.physics.add.collider(this.player, this.zombieA, (player, zombieA) => {
+    this.health = Math.max(0, this.health - this.zombieAdamage);
+  }, (player, zombieA) => {
+    this.zombieA.isAttacking = true;
+  }, this);
+
+  // make zombie attack
+  // TODO: fix setting to true on collision (works on first collision, but not after that)
+  if (this.zombieA.isAttacking) {
+    this.zombieA.play("zombie_attack_a", true);
+    this.zombieA.on('animationcomplete', () => {
+      this.zombieA.isAttacking = false;
+    }, this);
+  }
+  
+  console.log(this.zombieA.isAttacking);
 }
 
 export default update;
